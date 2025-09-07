@@ -23,7 +23,7 @@ public class S3ContentReaderAdapter implements ContentReaderPort {
 
     private final ObjectMapper objectMapper;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
     @Override
