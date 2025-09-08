@@ -30,7 +30,7 @@ public class MarkdownController {
     @GetMapping("dd")
     public void slug() {
 
-        slugPersistencePort.save(Slug.of("title", Category.ALGORITHM, List.of("tea", "223"), "summary", "me"));
+        slugPersistencePort.save(Slug.of("title", Category.ALGORITHM, "summary", "me"));
 
     }
 

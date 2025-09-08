@@ -39,8 +39,6 @@ public class LambdaHandler implements Function<S3Event, String> {
 
         log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-        slugPersistencePort.save(Slug.of("zzz", Category.ALGORITHM, List.of("nice", "zz"), "summary", "masiljangajji"));
-
         for (S3EventNotification.S3EventNotificationRecord r : event.getRecords()) {
             final String eventName = r.getEventName(); // e.g., ObjectCreated:Put
             final String bucket = r.getS3().getBucket().getName();
