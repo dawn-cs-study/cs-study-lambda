@@ -35,4 +35,9 @@ public class SlugRepositoryImpl implements SlugRepository {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public void deleteByTitle(String title) {
+        repository.deleteByTitle(title);
+    }
 }
