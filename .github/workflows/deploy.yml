@@ -1,7 +1,7 @@
 name: Content & App (parallel when needed)
 on:
   push:
-    branches: [ main , feature/lambda-test]
+    branches: [ main ]
 
 jobs:
   detect:
