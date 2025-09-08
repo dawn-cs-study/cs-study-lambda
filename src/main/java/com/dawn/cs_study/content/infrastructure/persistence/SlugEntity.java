@@ -12,18 +12,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "slug")
 public class SlugEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
 
     @Enumerated(EnumType.STRING)
     private Category category;
-
-    @ElementCollection
-    private List<String> tags;
 
     private String summary;
 

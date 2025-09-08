@@ -1,10 +1,10 @@
 package com.dawn.cs_study.content.infrastructure.s3;
 
-import com.dawn.cs_study.content.application.port.out.ContentReaderPort;
+import com.dawn.cs_study.content.application.port.out.ReadContentPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -15,9 +15,9 @@ import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class S3ContentReaderAdapter implements ContentReaderPort {
+public class S3ReadContentAdapter implements ReadContentPort {
 
     private final S3Client s3Client;
 

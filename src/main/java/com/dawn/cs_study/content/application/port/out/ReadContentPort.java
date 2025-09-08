@@ -1,6 +1,6 @@
 package com.dawn.cs_study.content.application.port.out;
 
-public interface ContentReaderPort {
+public interface ReadContentPort {
 
     String readText(String key);
 

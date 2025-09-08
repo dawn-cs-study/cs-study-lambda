@@ -25,17 +25,40 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    springCloudVersion = "2023.0.4" // 릴리스 트레인 최신권장
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+
+    dependencies {
+        dependency "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+        dependency "io.netty:netty-codec-http:4.1.114.Final"
+    }
+}
+
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // aws-lambda
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.2'
+
+    // spring cloud function
+    implementation "org.springframework.cloud:spring-cloud-function-context"
+    implementation "org.springframework.cloud:spring-cloud-function-adapter-aws"
 
     // spring cloud aws
     implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.4.0')
@@ -55,9 +78,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.named('shadowJar') {
-    archiveBaseName.set('slug-handler')
-    archiveClassifier.set('')
-    archiveVersion.set('')
+tasks.register('buildZip', Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
 }
-
