@@ -17,17 +17,16 @@ public class Slug {
 
     private Category category;
 
-    private List<String> tags;
 
     private String summary;
     private String author;
 
     public static Slug of(String title, Category category, List<String> tags, String summary, String author) {
-        return new Slug(null, title, category, tags, summary, author);
+        return new Slug(null, title, category, summary, author);
     }
 
-    public static Slug of(Long id, String title, Category category, List<String> tags, String summary, String author) {
-        return new Slug(id, title, category, tags, summary, author);
+    public static Slug of(Long id, String title, Category category, String summary, String author) {
+        return new Slug(id, title, category, summary, author);
     }
 
 }

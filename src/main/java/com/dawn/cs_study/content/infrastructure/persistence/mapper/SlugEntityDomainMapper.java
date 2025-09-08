@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 public class SlugEntityDomainMapper {
 
     public Slug toDomain(SlugEntity entity) {
-        return Slug.of(entity.getId(),entity.getTitle(),entity.getCategory(),entity.getTags(),entity.getSummary(),entity.getAuthor());
+        return Slug.of(entity.getId(), entity.getTitle(), entity.getCategory(), entity.getSummary(), entity.getAuthor());
     }
 
     public SlugEntity toEntity(Slug domain) {
-        return new SlugEntity(domain.getId(),domain.getTitle(),domain.getCategory(),domain.getTags(),domain.getSummary(),domain.getAuthor());
+        return new SlugEntity(domain.getId(), domain.getTitle(), domain.getCategory(), domain.getSummary(), domain.getAuthor());
     }
 
 

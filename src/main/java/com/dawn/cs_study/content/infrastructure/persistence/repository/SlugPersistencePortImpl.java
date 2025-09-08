@@ -1,6 +1,6 @@
 package com.dawn.cs_study.content.infrastructure.persistence.repository;
 
-import com.dawn.cs_study.content.application.port.out.SlugRepository;
+import com.dawn.cs_study.content.application.port.out.SlugPersistencePort;
 import com.dawn.cs_study.content.domain.Slug;
 import com.dawn.cs_study.content.infrastructure.persistence.SlugEntity;
 import com.dawn.cs_study.content.infrastructure.persistence.mapper.SlugEntityDomainMapper;
@@ -11,11 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class SlugRepositoryImpl implements SlugRepository {
+public class SlugPersistencePortImpl implements SlugPersistencePort {
 
     private final SlugJpaRepository repository;
 
     private final SlugEntityDomainMapper mapper;
+
+
 
     @Override
     @Transactional(readOnly = true)
