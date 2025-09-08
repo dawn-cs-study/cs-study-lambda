@@ -1,4 +1,4 @@
-package com.dawn.cs_study.content.infrastructure.lambda;
+package com.dawn.cs_study.content.application.port.in.lambda;
 
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification;
