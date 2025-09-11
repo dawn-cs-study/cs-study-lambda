@@ -13,13 +13,7 @@ public class DeleteJsonResourceUseCase {
 
     private final SlugCommandPort slugCommandPort;
 
-    private final WriteContentPort writeContentPort;
-
-    public void deleteJsonResourceUseCase(String bucket,
-                                          String jsonKey) {
-
-        writeContentPort.delete(bucket, jsonKey);
-        log.info("delete bucket:{}, key:{}", bucket, jsonKey);
+    public void deleteJsonResourceUseCase(String jsonKey) {
 
         slugCommandPort.deleteByTitle(jsonKey);
         log.info("JSON removed (deleted from repository): {} ", jsonKey);

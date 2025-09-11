@@ -15,7 +15,7 @@ public class DeleteMarkdownHtmlUseCase {
 
     public void deleteMarkdownHtml(String bucket,
                                    String mdKey) {
-        writeContentPort.delete(bucket, mdKey);
+
         String htmlKey = KeyNamingPolicy.toHtmlKey(mdKey);
         writeContentPort.delete(bucket, htmlKey);
         log.info("Deleted HTML for removed markdown: {} in {}", htmlKey, bucket);
