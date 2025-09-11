@@ -66,13 +66,15 @@ public class S3ContentEventHandler implements Function<S3Event, String> {
         return switch (eventName.split(":")[0]) { // "ObjectCreated" or "ObjectRemoved"
             case "ObjectRemoved" -> switch (getExtension(key)) {
                 case "md" -> () -> deleteMarkdownHtmlUseCase.deleteMarkdownHtml(bucket, key);
-                case "json" -> () -> deleteJsonResourceUseCase.deleteJsonResourceUseCase(bucket, key);
-                default -> throw new RuntimeException("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다.");
+                case "json" -> () -> deleteJsonResourceUseCase.deleteJsonResourceUseCase(key);
+                default ->
+                        throw new RuntimeException(String.format("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다. %s", key));
             };
             case "ObjectCreated" -> switch (getExtension(key)) {
                 case "md" -> () -> renderMarkdownToHtmlUseCase.renderHtml(bucket, key);
                 case "json" -> () -> upsertSlugFromJsonUseCase.upsertSlugFromJson(key, Slug.class);
-                default -> throw new RuntimeException("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다.");
+                default ->
+                        throw new RuntimeException(String.format("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다. %s", key));
             };
             default -> throw new RuntimeException("잘못된 S3 이벤트입니다. 이벤트는 반드시 ObjectRemoved 또는 ObjectCreated 이어야 합니다.");
         };
