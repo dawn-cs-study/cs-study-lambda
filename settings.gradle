@@ -1,1 +1,13 @@
-rootProject.name = 'cs-study.content'
+rootProject.name = 'cs-study.lambda'
+
+def isGradleModule = { File d ->
+    d.isDirectory() && d.name.startsWith('lambda-') &&
+            (new File(d, 'build.gradle').exists())
+}
+
+rootDir.listFiles()
+        .findAll { isGradleModule(it) }
+        .each { dir ->
+            include(":${dir.name}")
+            project(":${dir.name}").projectDir = dir
+        }
