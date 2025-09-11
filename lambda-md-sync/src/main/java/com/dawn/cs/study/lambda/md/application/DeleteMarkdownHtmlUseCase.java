@@ -1,11 +1,10 @@
 package com.dawn.cs.study.lambda.md.application;
 
-import com.dawn.cs.study.lambda.md.Utils;
+import com.dawn.cs.study.lambda.md.domain.KeyNamingPolicy;
 import com.dawn.cs.study.lambda.md.application.port.WriteContentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Component
@@ -17,7 +16,7 @@ public class DeleteMarkdownHtmlUseCase {
     public void deleteMarkdownHtml(String bucket,
                                    String mdKey) {
         writeContentPort.delete(bucket, mdKey);
-        String htmlKey = Utils.toHtmlKey(mdKey);
+        String htmlKey = KeyNamingPolicy.toHtmlKey(mdKey);
         writeContentPort.delete(bucket, htmlKey);
         log.info("Deleted HTML for removed markdown: {} in {}", htmlKey, bucket);
     }
