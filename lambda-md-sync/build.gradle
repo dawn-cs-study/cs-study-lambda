@@ -1,0 +1,20 @@
+bootJar { enabled = true }
+
+dependencies {
+
+    // JPA , MySQL
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.mysql:mysql-connector-j:8.4.0")
+
+    // flexMark
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
+}
+
+
+tasks.register('buildMdSyncZip', Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}

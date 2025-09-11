@@ -2,86 +2,82 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group = 'com.dawn'
-version = '0.0.1-SNAPSHOT'
-description = 'dawn-cs-study content server'
+bootJar { enabled = false }
+jar { enabled = true }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+allprojects {
+
+    group = 'com.dawn'
+    version = '0.0.1-SNAPSHOT'
+    description = 'dawn-cs-study lambda'
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
     }
-}
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
-}
 
-repositories {
-    mavenCentral()
-}
+    repositories {
+        mavenCentral()
+    }
 
-ext {
-    springCloudVersion = "2023.0.4" // 릴리스 트레인 최신권장
-}
+    ext {
+        springCloudVersion = "2023.0.4" // 릴리스 트레인 최신권장
+    }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+
+        dependencies {
+            dependency "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+            dependency "io.netty:netty-codec-http:4.1.114.Final"
+        }
     }
 
     dependencies {
-        dependency "com.fasterxml.jackson.core:jackson-databind:2.17.2"
-        dependency "io.netty:netty-codec-http:4.1.114.Final"
+
+        // spring web
+        implementation "org.springframework.boot:spring-boot-starter"
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+        // aws-lambda
+        implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+        implementation 'com.amazonaws:aws-lambda-java-events:3.11.2'
+
+        // spring cloud function
+        implementation "org.springframework.cloud:spring-cloud-function-context"
+        implementation "org.springframework.cloud:spring-cloud-function-adapter-aws"
+
+        // spring cloud aws
+        implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.4.0')
+        implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+        implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     }
-}
 
-
-dependencies {
-
-
-    implementation "org.springframework.boot:spring-boot-starter"
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // aws-lambda
-    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
-    implementation 'com.amazonaws:aws-lambda-java-events:3.11.2'
-
-    // spring cloud function
-    implementation "org.springframework.cloud:spring-cloud-function-context"
-    implementation "org.springframework.cloud:spring-cloud-function-adapter-aws"
-
-    // spring cloud aws
-    implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.4.0')
-    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
-    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
-
-    // JPA , MySQL
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.mysql:mysql-connector-j:8.4.0")
-
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8' // flexMark
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-tasks.register('buildZip', Zip) {
-    from compileJava
-    from processResources
-    into('lib') {
-        from configurations.runtimeClasspath
+    tasks.named('test') {
+        useJUnitPlatform()
     }
+
 }
