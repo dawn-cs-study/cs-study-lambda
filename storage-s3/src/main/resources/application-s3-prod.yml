@@ -1,0 +1,21 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  config:
+    import: "aws-parameterstore:/config/dawn-cs-study/"
+
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      s3:
+        bucket: ${bucket-name}
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
