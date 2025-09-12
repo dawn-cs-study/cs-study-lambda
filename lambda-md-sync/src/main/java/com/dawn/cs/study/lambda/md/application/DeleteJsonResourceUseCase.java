@@ -1,7 +1,6 @@
 package com.dawn.cs.study.lambda.md.application;
 
 import com.dawn.cs.study.lambda.md.application.port.SlugCommandPort;
-import com.dawn.cs.study.lambda.md.application.port.WriteContentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
