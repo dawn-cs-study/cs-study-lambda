@@ -1,11 +1,10 @@
 package com.dawn.cs.study.lambda.md.handler;
 
 import com.amazonaws.services.lambda.runtime.events.S3Event;
-import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification;
 import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification.S3EventNotificationRecord;
 import com.dawn.cs.study.lambda.md.application.DeleteJsonResourceUseCase;
-import com.dawn.cs.study.lambda.md.application.DeleteMarkdownHtmlUseCase;
-import com.dawn.cs.study.lambda.md.application.RenderMarkdownToHtmlUseCase;
+import com.dawn.cs.study.lambda.md.application.DeleteMarkdownArtifactsUseCase;
+import com.dawn.cs.study.lambda.md.application.MarkdownToHtmlAndVectorUseCase;
 import com.dawn.cs.study.lambda.md.application.UpsertSlugFromJsonUseCase;
 import com.dawn.cs.study.lambda.md.domain.Slug;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,11 +21,11 @@ import java.util.function.Function;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class S3ContentEventHandler implements Function<S3Event, String> {
+public class S3EventHandler implements Function<S3Event, String> {
 
     private final DeleteJsonResourceUseCase deleteJsonResourceUseCase;
-    private final DeleteMarkdownHtmlUseCase deleteMarkdownHtmlUseCase;
-    private final RenderMarkdownToHtmlUseCase renderMarkdownToHtmlUseCase;
+    private final DeleteMarkdownArtifactsUseCase deleteMarkdownArtifactsUseCase;
+    private final MarkdownToHtmlAndVectorUseCase markdownToHtmlAndVectorUseCase;
     private final UpsertSlugFromJsonUseCase upsertSlugFromJsonUseCase;
 
     @Override
@@ -60,18 +58,17 @@ public class S3ContentEventHandler implements Function<S3Event, String> {
     private Runnable buildTask(S3EventNotificationRecord r) {
 
         String eventName = r.getEventName();
-        String bucket = r.getS3().getBucket().getName();
         String key = URLDecoder.decode(r.getS3().getObject().getKey(), StandardCharsets.UTF_8);
 
         return switch (eventName.split(":")[0]) { // "ObjectCreated" or "ObjectRemoved"
             case "ObjectRemoved" -> switch (getExtension(key)) {
-                case "md" -> () -> deleteMarkdownHtmlUseCase.deleteMarkdownHtml(bucket, key);
+                case "md" -> () -> deleteMarkdownArtifactsUseCase.deleteMarkdownArtifacts(key);
                 case "json" -> () -> deleteJsonResourceUseCase.deleteJsonResourceUseCase(key);
                 default ->
                         throw new RuntimeException(String.format("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다. %s", key));
             };
             case "ObjectCreated" -> switch (getExtension(key)) {
-                case "md" -> () -> renderMarkdownToHtmlUseCase.renderHtml(bucket, key);
+                case "md" -> () -> markdownToHtmlAndVectorUseCase.markdownToHtmlAndVector(key);
                 case "json" -> () -> upsertSlugFromJsonUseCase.upsertSlugFromJson(key, Slug.class);
                 default ->
                         throw new RuntimeException(String.format("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다. %s", key));
