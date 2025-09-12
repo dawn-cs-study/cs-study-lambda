@@ -1,9 +1,9 @@
-package com.dawn.cs.study.lambda.md.infrastructure.persistence.repository;
+package com.dawn.cs.study.lambda.md.infrastructure.persistence.jpa.repository;
 
 import com.dawn.cs.study.lambda.md.application.port.SlugCommandPort;
 import com.dawn.cs.study.lambda.md.domain.Slug;
-import com.dawn.cs.study.lambda.md.infrastructure.persistence.SlugEntity;
-import com.dawn.cs.study.lambda.md.infrastructure.persistence.mapper.SlugEntityDomainMapper;
+import com.dawn.cs.study.lambda.md.infrastructure.persistence.jpa.SlugEntity;
+import com.dawn.cs.study.lambda.md.infrastructure.persistence.jpa.mapper.SlugEntityDomainMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

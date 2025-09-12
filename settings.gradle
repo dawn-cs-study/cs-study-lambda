@@ -11,5 +11,3 @@ rootDir.listFiles()
             include(":${dir.name}")
             project(":${dir.name}").projectDir = dir
         }
-
-include("storage-s3")

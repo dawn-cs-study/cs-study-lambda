@@ -11,9 +11,9 @@ spring:
     import: "aws-parameterstore:/config/dawn-cs-study/"
 
   datasource:
-    url: ${db-url}
-    username: ${db-user}
-    password: ${db-password}
+    url: ${db_url}
+    username: ${db_user}
+    password: ${db_password}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
@@ -36,7 +36,15 @@ spring:
         static: ap-northeast-2
       s3:
         bucket: ${bucket-name}
+    function:
+      definition: s3EventHandler
 
+  ai:
+    openai:
+      api-key: ${open-ai-api-key}
+      embedding:
+        options:
+          model: text-embedding-3-large  # or text-embedding-3-small (1536??)
 
 logging:
   level:

@@ -1,7 +1,7 @@
-package com.dawn.cs.study.lambda.md.infrastructure.persistence.mapper;
+package com.dawn.cs.study.lambda.md.infrastructure.persistence.jpa.mapper;
 
 import com.dawn.cs.study.lambda.md.domain.Slug;
-import com.dawn.cs.study.lambda.md.infrastructure.persistence.SlugEntity;
+import com.dawn.cs.study.lambda.md.infrastructure.persistence.jpa.SlugEntity;
 import org.springframework.stereotype.Component;
 
 @Component

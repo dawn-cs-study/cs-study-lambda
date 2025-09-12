@@ -1,4 +1,4 @@
-package com.dawn.cs.study.lambda.md.infrastructure.persistence;
+package com.dawn.cs.study.lambda.md.infrastructure.persistence.jpa;
 
 import com.dawn.cs.study.lambda.md.domain.Category;
 import jakarta.persistence.*;
