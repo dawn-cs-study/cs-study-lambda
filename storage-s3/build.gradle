@@ -1,0 +1,7 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
+
+dependencies {
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+}
