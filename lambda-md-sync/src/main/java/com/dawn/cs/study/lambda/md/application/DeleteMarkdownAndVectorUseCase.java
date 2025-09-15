@@ -1,23 +1,20 @@
 package com.dawn.cs.study.lambda.md.application;
 
-import com.dawn.cs.study.lambda.md.application.port.VectorStorePort;
+import com.dawn.cs.study.lambda.md.application.port.VectorCommandPort;
 import com.dawn.cs.study.lambda.md.application.port.WriteContentPort;
-import com.dawn.cs.study.lambda.md.domain.KeyNamingPolicy;
+import com.dawn.cs.study.lambda.md.domain.support.KeyNamingPolicy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DeleteMarkdownArtifactsUseCase {
+public class DeleteMarkdownAndVectorUseCase {
 
-    private final WriteContentPort writeContentPort;
+    private  final WriteContentPort writeContentPort;
 
-    private final VectorStorePort vectorStorePort;
-
+    private final VectorCommandPort vectorCommandPort;
 
     public void deleteMarkdownArtifacts(String mdKey) {
         deleteMarkdownEmbedding(mdKey);
@@ -32,7 +29,7 @@ public class DeleteMarkdownArtifactsUseCase {
 
     private void deleteMarkdownEmbedding(String mdKey) {
         try {
-            vectorStorePort.delete(mdKey);
+            vectorCommandPort.delete(mdKey);
             log.info("Deleted markdown embedding for key={}", mdKey);
         } catch (Exception e) {
             log.error("Failed to delete embedding for key={}", mdKey, e);

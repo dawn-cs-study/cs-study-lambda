@@ -1,4 +1,4 @@
-package com.dawn.cs.study.lambda.md.domain;
+package com.dawn.cs.study.lambda.md.domain.support;
 
 
 public class KeyNamingPolicy {

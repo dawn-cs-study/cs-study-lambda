@@ -1,4 +1,12 @@
+plugins {
+    id "me.champeau.jmh" version "0.7.3"
+}
+
 bootJar { enabled = true }
+
+
+apply plugin: 'me.champeau.jmh'
+
 
 ext {
     set('springAiVersion', "1.0.1")
@@ -20,11 +28,21 @@ dependencies {
     // JPA , PostgreSQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly 'org.postgresql:postgresql'
+
+
     // flexMark
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
 
-}
+    // JMH Performance Test
+    jmh 'org.openjdk.jmh:jmh-core:1.37'
+    jmh 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
 
+    jmh 'com.amazonaws:aws-lambda-java-events:3.11.2'
+    jmh 'com.amazonaws:aws-lambda-java-core:1.2.3'
+    // without logging
+    jmh 'org.slf4j:slf4j-simple:2.0.13'
+
+}
 
 tasks.register('buildMdSyncZip', Zip) {
     from compileJava
@@ -33,3 +51,9 @@ tasks.register('buildMdSyncZip', Zip) {
         from configurations.runtimeClasspath
     }
 }
+
+jmh {
+    jvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=off']
+}
+
+tasks.named('jmhJar', Jar).configure { zip64 = true }

@@ -19,7 +19,7 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(24)
         }
     }
 
@@ -59,9 +59,12 @@ allprojects {
         annotationProcessor 'org.projectlombok:lombok'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+        // spring retry
+        implementation "org.springframework.retry:spring-retry"
+
         // aws-lambda
         implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
-        implementation 'com.amazonaws:aws-lambda-java-events:3.11.2'
+        implementation 'com.amazonaws:aws-lambda-java-events:3.11.5'
 
         // spring cloud function
         implementation "org.springframework.cloud:spring-cloud-function-context"
@@ -73,6 +76,7 @@ allprojects {
         implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
 
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 
     }
 
