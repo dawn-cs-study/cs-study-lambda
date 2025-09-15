@@ -4,9 +4,9 @@ import org.springframework.ai.document.Document;
 
 import java.util.List;
 
-public interface VectorStorePort {
+public interface VectorCommandPort {
 
-    public void add(List<Document> documents);
+    public void embedDocuments(List<Document>documents);
 
     public void delete(String id);
 
