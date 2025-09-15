@@ -2,8 +2,8 @@ package com.dawn.cs.study.lambda.md.handler;
 
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification.S3EventNotificationRecord;
-import com.dawn.cs.study.lambda.md.application.DeleteJsonResourceUseCase;
-import com.dawn.cs.study.lambda.md.application.DeleteMarkdownArtifactsUseCase;
+import com.dawn.cs.study.lambda.md.application.DeleteSlugFromJsonUseCase;
+import com.dawn.cs.study.lambda.md.application.DeleteMarkdownAndVectorUseCase;
 import com.dawn.cs.study.lambda.md.application.MarkdownToHtmlAndVectorUseCase;
 import com.dawn.cs.study.lambda.md.application.UpsertSlugFromJsonUseCase;
 import com.dawn.cs.study.lambda.md.domain.Slug;
@@ -17,27 +17,26 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class S3EventHandler implements Function<S3Event, String> {
 
-    private final DeleteJsonResourceUseCase deleteJsonResourceUseCase;
-    private final DeleteMarkdownArtifactsUseCase deleteMarkdownArtifactsUseCase;
+    private final DeleteSlugFromJsonUseCase deleteSlugFromJsonUseCase;
+    private final DeleteMarkdownAndVectorUseCase deleteMarkdownAndVectorUseCase;
     private final MarkdownToHtmlAndVectorUseCase markdownToHtmlAndVectorUseCase;
     private final UpsertSlugFromJsonUseCase upsertSlugFromJsonUseCase;
 
     @Override
     public String apply(S3Event event) {
-        log.info("S3ContentEventHandler start");
 
+        long start = System.currentTimeMillis();
+        log.info("S3ContentEventHandler start at {}", start);
 
-        // 가상 스레드 풀 생성 (Java 21)
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             // 각 이벤트를 CompletableFuture로 비동기 실행
-
-
             // allOf -> 모든 task 를 기다리는 새로운 CompletableFuture<Void> 만들어 반환
             // join -> 반환된 CompletableFuture<Void> 끝날 때까지 블로킹 , 즉 모든 task 실행이 끝날 때까지 blocking
             // runAsync 에서 바로 task 실행
@@ -52,6 +51,10 @@ public class S3EventHandler implements Function<S3Event, String> {
             throw new RuntimeException(e);
         }
 
+        long end = System.currentTimeMillis();
+        log.info("S3ContentEventHandler end at {}, elapsed={} ms", end, (end - start));
+
+
         return "OK";
     }
 
@@ -62,8 +65,8 @@ public class S3EventHandler implements Function<S3Event, String> {
 
         return switch (eventName.split(":")[0]) { // "ObjectCreated" or "ObjectRemoved"
             case "ObjectRemoved" -> switch (getExtension(key)) {
-                case "md" -> () -> deleteMarkdownArtifactsUseCase.deleteMarkdownArtifacts(key);
-                case "json" -> () -> deleteJsonResourceUseCase.deleteJsonResourceUseCase(key);
+                case "md" -> () -> deleteMarkdownAndVectorUseCase.deleteMarkdownArtifacts(key);
+                case "json" -> () -> deleteSlugFromJsonUseCase.deleteJsonResourceUseCase(key);
                 default ->
                         throw new RuntimeException(String.format("잘못된 파일 확장자입니다. 확장자는 반드시 'md' 또는 'json' 이어야 합니다. %s", key));
             };

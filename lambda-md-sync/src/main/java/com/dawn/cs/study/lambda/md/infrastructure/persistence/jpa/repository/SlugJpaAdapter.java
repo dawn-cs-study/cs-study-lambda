@@ -9,22 +9,21 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional
 @RequiredArgsConstructor
 public class SlugJpaAdapter implements SlugCommandPort {
 
-    private final SlugJpaRepository slugJpaRepository;
+    private final SlugJpaRepository repository;
 
-    private final SlugEntityDomainMapper slugEntityDomainMapper;
+    private final SlugEntityDomainMapper mapper;
 
     @Override
     public Slug save(Slug slug) {
-        SlugEntity slugEntity = slugEntityDomainMapper.toEntity(slug);
-        return slugEntityDomainMapper.toDomain(slugJpaRepository.save(slugEntity));
+        SlugEntity slugEntity = mapper.toEntity(slug);
+        return mapper.toDomain(repository.save(slugEntity));
     }
 
     @Override
     public void deleteByTitle(String title) {
-        slugJpaRepository.deleteByTitle(title);
+        repository.deleteByTitle(title);
     }
 }

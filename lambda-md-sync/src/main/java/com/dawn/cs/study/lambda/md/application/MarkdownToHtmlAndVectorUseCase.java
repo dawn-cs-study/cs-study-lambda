@@ -1,15 +1,15 @@
 package com.dawn.cs.study.lambda.md.application;
 
 import com.dawn.cs.study.lambda.md.application.port.ReadContentPort;
-import com.dawn.cs.study.lambda.md.application.port.VectorStorePort;
+import com.dawn.cs.study.lambda.md.application.port.VectorCommandPort;
 import com.dawn.cs.study.lambda.md.application.port.WriteContentPort;
-import com.dawn.cs.study.lambda.md.domain.KeyNamingPolicy;
+import com.dawn.cs.study.lambda.md.domain.support.KeyNamingPolicy;
 import com.dawn.cs.study.lambda.md.application.port.ReadMarkdownPort;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -17,33 +17,24 @@ import java.util.Map;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
+@Transactional
 public class MarkdownToHtmlAndVectorUseCase {
 
-    private final ReadContentPort readContentPort;
-    private final ReadMarkdownPort readMarkdownPort;
-    private final WriteContentPort writeContentPort;
-    private final VectorStorePort vectorStorePort;
+    private ReadContentPort readContentPort;
+    private ReadMarkdownPort readMarkdownPort;
+    private WriteContentPort writeContentPort;
+    private VectorCommandPort vectorCommandPort;
 
     public void markdownToHtmlAndVector(String mdKey) {
         log.info("renderHtml start {}", mdKey);
-        String md = readContentPort.readText(mdKey);
+        String markdown = readContentPort.readText(mdKey);
 
-        markdownEmbedding(md, mdKey);
-        markdownToHtml(md, mdKey);
+        embedMarkdown(markdown, mdKey);
+        renderMarkdownToHtmlAndStore(markdown, KeyNamingPolicy.toHtmlKey(mdKey));
     }
 
-    private void markdownToHtml(String md, String mdKey) {
-        String html = readMarkdownPort.toHtml(md);
-
-        String htmlKey = KeyNamingPolicy.toHtmlKey(mdKey);
-
-        log.info("renderHtml key {}", htmlKey);
-        writeContentPort.upload(
-                htmlKey, html.getBytes(StandardCharsets.UTF_8), "text/html; charset=UTF-8");
-    }
-
-    private void markdownEmbedding(String md, String mdKey) {
+    private void embedMarkdown(String md, String mdKey) {
+        log.info("Saved markdown file [{}] into pgvector", mdKey);
 
         var document = new Document(md, Map.of("key", mdKey));
 
@@ -56,9 +47,19 @@ public class MarkdownToHtmlAndVectorUseCase {
                 .build();
 
         List<Document> chunks = splitter.apply(List.of(document));
-        vectorStorePort.add(chunks);
+        vectorCommandPort.embedDocuments(chunks);
+    }
 
-        log.info("Saved markdown file [{}] with {} chunks into pgvector", mdKey, chunks.size());
+    private void renderMarkdownToHtmlAndStore(String markdown, String htmlKey) {
+
+        log.info("renderMarkdownToHtmlAndStore start {}", htmlKey);
+        String html = readMarkdownPort.toHtml(markdown);
+
+        writeContentPort.upload(
+                htmlKey,
+                html.getBytes(StandardCharsets.UTF_8),
+                "text/html; charset=UTF-8"
+        );
     }
 
 
