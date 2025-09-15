@@ -3,18 +3,18 @@ package com.dawn.cs.study.lambda.md.application;
 import com.dawn.cs.study.lambda.md.application.port.VectorCommandPort;
 import com.dawn.cs.study.lambda.md.application.port.WriteContentPort;
 import com.dawn.cs.study.lambda.md.domain.support.KeyNamingPolicy;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class DeleteMarkdownAndVectorUseCase {
 
-    private  WriteContentPort writeContentPort;
+    private  final WriteContentPort writeContentPort;
 
-    private VectorCommandPort vectorCommandPort;
+    private final VectorCommandPort vectorCommandPort;
 
     public void deleteMarkdownArtifacts(String mdKey) {
         deleteMarkdownEmbedding(mdKey);

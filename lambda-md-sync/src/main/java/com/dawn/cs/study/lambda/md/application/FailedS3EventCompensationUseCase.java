@@ -2,7 +2,6 @@ package com.dawn.cs.study.lambda.md.application;
 
 import com.dawn.cs.study.lambda.md.application.port.FailedS3EventCommandPort;
 import com.dawn.cs.study.lambda.md.domain.FailedS3Event;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;

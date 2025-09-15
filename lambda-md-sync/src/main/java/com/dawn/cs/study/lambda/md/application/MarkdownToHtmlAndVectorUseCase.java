@@ -1,10 +1,11 @@
 package com.dawn.cs.study.lambda.md.application;
 
 import com.dawn.cs.study.lambda.md.application.port.ReadContentPort;
+import com.dawn.cs.study.lambda.md.application.port.ReadMarkdownPort;
 import com.dawn.cs.study.lambda.md.application.port.VectorCommandPort;
 import com.dawn.cs.study.lambda.md.application.port.WriteContentPort;
 import com.dawn.cs.study.lambda.md.domain.support.KeyNamingPolicy;
-import com.dawn.cs.study.lambda.md.application.port.ReadMarkdownPort;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
@@ -18,12 +19,13 @@ import java.util.Map;
 @Slf4j
 @Component
 @Transactional
+@RequiredArgsConstructor
 public class MarkdownToHtmlAndVectorUseCase {
 
-    private ReadContentPort readContentPort;
-    private ReadMarkdownPort readMarkdownPort;
-    private WriteContentPort writeContentPort;
-    private VectorCommandPort vectorCommandPort;
+    private final ReadContentPort readContentPort;
+    private final ReadMarkdownPort readMarkdownPort;
+    private final WriteContentPort writeContentPort;
+    private final VectorCommandPort vectorCommandPort;
 
     public void markdownToHtmlAndVector(String mdKey) {
         log.info("renderHtml start {}", mdKey);

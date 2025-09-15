@@ -3,8 +3,6 @@ package com.dawn.cs.study.lambda.md.application;
 import com.dawn.cs.study.lambda.md.application.port.ReadContentPort;
 import com.dawn.cs.study.lambda.md.application.port.SlugCommandPort;
 import com.dawn.cs.study.lambda.md.domain.Slug;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,11 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @Transactional
+@RequiredArgsConstructor
 public class UpsertSlugFromJsonUseCase {
 
-    private ReadContentPort readContentPort;
+    private final ReadContentPort readContentPort;
 
-    private SlugCommandPort slugCommandPort;
+    private final SlugCommandPort slugCommandPort;
 
     public void upsertSlugFromJson(String jsonKey, Class<Slug> type) {
         log.info("readJson start {}", jsonKey);
